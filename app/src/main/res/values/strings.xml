@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PencilsAdmin</string>
+    <string name="token">token</string>
+    <string name="admin_id"></string>
+</resources>

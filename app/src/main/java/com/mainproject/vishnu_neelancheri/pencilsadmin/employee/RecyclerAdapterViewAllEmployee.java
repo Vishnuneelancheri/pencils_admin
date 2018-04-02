@@ -25,7 +25,7 @@ public class RecyclerAdapterViewAllEmployee extends RecyclerView.Adapter<Recycle
     }
     public static class ViewAllEmployeeHolder extends RecyclerView.ViewHolder{
         private TextView txtName, txtEmpPhone, txtEmpStationCode;
-        private Button btnViework, btnPendingWork, btnTempDisable, btnPermenentlyDisable;
+        private Button btnViework, btnPendingWork, btnTempDisable, btnPermenentlyDisable, btnEditEmployee;
         private LinearLayout linearParent;
         public ViewAllEmployeeHolder(View view ){
             super( view );
@@ -37,7 +37,7 @@ public class RecyclerAdapterViewAllEmployee extends RecyclerView.Adapter<Recycle
             btnPendingWork = view.findViewById( R.id.btn_viw_pending );
             btnTempDisable = view.findViewById( R.id.btn_temp_disable );
             btnPermenentlyDisable = view.findViewById( R.id.btn_permenent_disable );
-
+            btnEditEmployee = view.findViewById(R.id.edt_employee);
             linearParent = view.findViewById( R.id.parent );
         }
     }
@@ -101,6 +101,12 @@ public class RecyclerAdapterViewAllEmployee extends RecyclerView.Adapter<Recycle
                 mSelectEmployee.onSelect( employeeModel );
             }
         });
+        viewAllEmployeeHolder.btnEditEmployee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSelectEmployee.editEmployee( employeeModel );
+            }
+        });
     }
 
     public interface SelectEmployee{
@@ -109,5 +115,6 @@ public class RecyclerAdapterViewAllEmployee extends RecyclerView.Adapter<Recycle
         void onPendingWork(EmployeeModel employeeModel );
         void onTempDisable(EmployeeModel employeeModel );
         void onPermenentDisable(EmployeeModel employeeModel );
+        void editEmployee(EmployeeModel employeeModel );
     }
 }

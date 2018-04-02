@@ -21,19 +21,30 @@ import com.mainproject.vishnu_neelancheri.pencilsadmin.utils.PrefModel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddEmployeeActivity extends AppCompatActivity implements View.OnClickListener{
+public class EditEmployeeActivity extends AppCompatActivity implements View.OnClickListener{
     private final int SELECT_STATION = 100;
     private StationModel mStationModel;
+    private EmployeeModel employeeModel;
     private String jobId = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_employee);
+        setContentView(R.layout.activity_edit_employee);
         findViewById(R.id.btn_select_station).setOnClickListener(this);
         findViewById(R.id.btn_submit).setOnClickListener(this);
+        Bundle bundle = getIntent().getExtras();
+        employeeModel = bundle.getParcelable(getResources().getString(R.string.app_name));
+        EditText edtName = findViewById( R.id.edit_txt_name );
+        EditText edtPhone = findViewById( R.id.edit_txt_phone );
+        EditText edtPassword = findViewById( R.id.edit_txt_password );
+
+        edtName.setText( employeeModel.getName() );
+        edtPhone.setText( employeeModel.getMobilePhone() );
+
         getJobid();
     }
     private void getJobid(){
+
         String url = PencilUtil.BASE_URL+"admin/request_job_id";
         NetWorkConnection.getInstance().volleyGetting(url, this, new NetworkResponse() {
             @Override
@@ -52,7 +63,7 @@ public class AddEmployeeActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view ){
         switch ( view.getId() ){
             case R.id.btn_select_station:{
-                Intent intent = new Intent( AddEmployeeActivity.this, ViewAndSelectStationActivity.class);
+                Intent intent = new Intent( EditEmployeeActivity.this, ViewAndSelectStationActivity.class);
                 startActivityForResult( intent, SELECT_STATION);
             }
             break;
@@ -76,10 +87,10 @@ public class AddEmployeeActivity extends AppCompatActivity implements View.OnCli
                 txtStationName.setText( mStationModel.getStationName() );
                 txtStationCode.setText( mStationModel.getStationCode() );
             }else{
-                PencilUtil.toaster( AddEmployeeActivity.this, "No data");
+                PencilUtil.toaster( EditEmployeeActivity.this, "No data");
             }
         }else {
-            PencilUtil.toaster( AddEmployeeActivity.this, "No data");
+            PencilUtil.toaster( EditEmployeeActivity.this, "No data");
         }
     }
     private void submitData(){
@@ -87,17 +98,19 @@ public class AddEmployeeActivity extends AppCompatActivity implements View.OnCli
             PencilUtil.toaster( this, "No station choosed");
             return;
         }
-        String url = PencilUtil.BASE_URL + "admin/add_employee";
+        String url = PencilUtil.BASE_URL + "admin/edit_employee";
 
         EditText edtTxtName = findViewById( R.id.edit_txt_name);
         EditText edtTxtPhone = findViewById( R.id.edit_txt_phone );
         EditText edtTxtPassword = findViewById( R.id.edit_txt_password );
-        EditText edtCommissionRate = findViewById( R.id.edt_txt_commission );
+        EditText edtTxtCommission = findViewById( R.id.edt_txt_cmsn );
+
         String name = edtTxtName.getText().toString();
         String phone = edtTxtPhone.getText().toString();
         String password = edtTxtPassword.getText().toString();
         String stationId = mStationModel.getStationId();
-        String commission = edtCommissionRate.getText().toString();
+        String commission = edtTxtCommission.getText().toString();
+
         PrefModel prefModel = GetPrefs.getInstance().getSharedPref( this );
 
         if ( prefModel == null ){
@@ -108,12 +121,12 @@ public class AddEmployeeActivity extends AppCompatActivity implements View.OnCli
         params.put("admin_token", prefModel.getToken() );
         params.put("admin_id", prefModel.getAdminId() );
         params.put("job_id", jobId );
-
+        params.put("employee_id", employeeModel.getEmployeeId() );
         params.put("employee_name", name );
         params.put("employee_phone", phone );
         params.put("employee_password", password );
         params.put("employee_station_id", mStationModel.getStationId() );
-        params.put("commission_rate", commission);
+        params.put("commission_rate", commission );
         NetWorkConnection.getInstance().volleyPosting(url, params, this, new NetworkResponse() {
             @Override
             public void onSuccess(String response) {
@@ -121,10 +134,10 @@ public class AddEmployeeActivity extends AppCompatActivity implements View.OnCli
                     AddEmployeeResoponseModel addEmployeeResoponseModel = new Gson().fromJson(
                             response, AddEmployeeResoponseModel.class
                     );
-                    PencilUtil.toaster( AddEmployeeActivity.this , addEmployeeResoponseModel.getMessage() );
+                    PencilUtil.toaster( EditEmployeeActivity.this , addEmployeeResoponseModel.getMessage() );
                     finish();
                 }catch ( Exception e ){
-                    PencilUtil.toaster( AddEmployeeActivity.this , e.toString() );
+                    PencilUtil.toaster( EditEmployeeActivity.this , e.toString() );
                 }
             }
 

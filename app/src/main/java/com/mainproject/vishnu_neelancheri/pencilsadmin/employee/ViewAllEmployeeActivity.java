@@ -1,10 +1,12 @@
 package com.mainproject.vishnu_neelancheri.pencilsadmin.employee;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mainproject.vishnu_neelancheri.pencilsadmin.R;
@@ -13,6 +15,8 @@ import com.mainproject.vishnu_neelancheri.pencilsadmin.utils.NetWorkConnection;
 import com.mainproject.vishnu_neelancheri.pencilsadmin.utils.NetworkResponse;
 import com.mainproject.vishnu_neelancheri.pencilsadmin.utils.PencilUtil;
 import com.mainproject.vishnu_neelancheri.pencilsadmin.utils.PrefModel;
+import com.mainproject.vishnu_neelancheri.pencilsadmin.work_details.ShowWorkDetailsActivity;
+import com.mainproject.vishnu_neelancheri.pencilsadmin.work_details.WorkModel;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -72,12 +76,12 @@ public class ViewAllEmployeeActivity extends AppCompatActivity {
 
             @Override
             public void onViewWork(EmployeeModel employeeModel) {
-
+                viewAllWordk( employeeModel , false);
             }
 
             @Override
             public void onPendingWork(EmployeeModel employeeModel) {
-
+                viewAllWordk( employeeModel , true );
             }
 
             @Override
@@ -88,6 +92,14 @@ public class ViewAllEmployeeActivity extends AppCompatActivity {
             @Override
             public void onPermenentDisable(EmployeeModel employeeModel) {
                 permenentlyDisable( employeeModel );
+            }
+            @Override
+            public void editEmployee(EmployeeModel employeeModel ){
+                Intent intent = new Intent( ViewAllEmployeeActivity.this, EditEmployeeActivity.class );
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(getResources().getString(R.string.app_name), employeeModel );
+                intent.putExtras( bundle );
+                startActivity( intent );
             }
         }
         );
@@ -154,6 +166,40 @@ public class ViewAllEmployeeActivity extends AppCompatActivity {
                     PencilUtil.toaster(ViewAllEmployeeActivity.this, "Employee can't permanently disabled");
                 }
                 finish();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+    private void  viewAllWordk(EmployeeModel employeeModel , final boolean isPending){
+        String url = PencilUtil.BASE_URL +"admin/view_employee_all_work";
+        PrefModel prefModel = GetPrefs.getInstance().getSharedPref(this);
+        Map<String,String> param = new HashMap<>();
+        param.put("employee_id", employeeModel.getEmployeeId() );
+        param.put("admin_token", prefModel.getToken() );
+        param.put("admin_id", prefModel.getAdminId() );
+        NetWorkConnection.getInstance().volleyPosting(url, param, this, new NetworkResponse() {
+            @Override
+            public void onSuccess(String response) {
+                try{
+                    Type listType = new TypeToken<ArrayList<WorkModel>>(){}.getType();
+                    ArrayList<WorkModel> workModelList = (ArrayList<WorkModel> ) new Gson().fromJson( response, listType);
+                    if ( workModelList.size() > 0 ){
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelableArrayList( getResources().getString(R.string.app_name), workModelList);
+                        bundle.putBoolean("isPendingOnly", isPending );
+                        Intent intent = new Intent( ViewAllEmployeeActivity.this, ShowWorkDetailsActivity.class );
+                        intent.putExtras( bundle );
+                        startActivity(intent);
+                    }else {
+                        PencilUtil.toaster( getApplicationContext(), "No data found");
+                    }
+                }catch (Exception e){
+                    PencilUtil.toaster( getApplicationContext(), e.toString());
+                }
             }
 
             @Override

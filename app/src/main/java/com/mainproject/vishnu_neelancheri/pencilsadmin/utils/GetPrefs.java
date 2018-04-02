@@ -29,4 +29,9 @@ public class GetPrefs {
         prefModel.setAdminId(sharedPreferences.getString(context.getResources().getString(R.string.admin_id), ""));
         return prefModel;
     }
+    public boolean logout( Context context ){
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences( context.getResources().getString( R.string.app_name), Context.MODE_PRIVATE );
+        return sharedPreferences.edit().clear().commit();
+    }
 }

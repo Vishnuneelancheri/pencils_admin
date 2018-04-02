@@ -55,6 +55,12 @@
             android:text="Permenently disable "
             android:textAllCaps="false"/>
     </LinearLayout>
+    <Button
+        android:id="@+id/edt_employee"
+        android:text="Edit"
+        android:textAllCaps="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"

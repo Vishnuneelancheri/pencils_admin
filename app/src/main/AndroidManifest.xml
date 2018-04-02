@@ -21,11 +21,20 @@
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".home.HomeActivity" />
         <activity android:name=".add_paper.AddPaperActivity" />
-        <activity android:name=".add_center.AddCenterActivity" />
+        <activity android:name=".add_center.AddStationActivity" />
         <activity android:name=".frame.AddMasterFrameActivity" />
         <activity android:name=".employee.AddEmployeeActivity" />
         <activity android:name=".add_center.ViewAndSelectStationActivity" />
-        <activity android:name=".employee.ViewAllEmployeeActivity"></activity>
+        <activity android:name=".employee.ViewAllEmployeeActivity" />
+        <activity android:name=".work_details.ShowWorkDetailsActivity" />
+        <activity android:name=".frame.ViewFrameStockActivity" />
+        <activity android:name=".frame.AddFrameStockActivity" />
+        <activity android:name=".employee.EditEmployeeActivity" />
+        <activity android:name=".add_paper.ViewAllPaperActivity" />
+        <activity android:name=".add_paper.EditPaperActivity" />
+        <activity android:name=".add_center.ViewAllStationActivity" />
+        <activity android:name=".add_center.EditStationActivity" />
+        <activity android:name=".cancellation.CancellationActivity"></activity>
     </application>
 
 </manifest>

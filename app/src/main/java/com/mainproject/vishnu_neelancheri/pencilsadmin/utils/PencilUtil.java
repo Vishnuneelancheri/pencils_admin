@@ -8,7 +8,8 @@ import android.widget.Toast;
  */
 
 public class PencilUtil {
-    public static final String BASE_URL = "http://192.168.1.6:8080/pencils_api/index.php/";
+    public static final String BASE_URL = "http://192.168.1.7:8080/pencils_api/index.php/"
+            /*"http://pencilcaricature.com/app_new/pencils_api/index.php/"*/;
 
     public static void toaster(Context context, String message){
         Toast.makeText( context, message, Toast.LENGTH_LONG).show();
